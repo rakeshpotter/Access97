@@ -97,6 +97,8 @@ function formatCell($val,$prop){
             echo $c.$val.$e;break;
         case "COUNTER":
             echo $c.$val.$e;break;
+        case "LONGCHAR":
+            echo $l.substr($val, 0, 10)."....".substr($val, strlen($val)-10).$e;break;
         default :
             echo $l.$val.$e;
     }
