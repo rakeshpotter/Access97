@@ -8,6 +8,7 @@
                 overflow-y: scroll;
                 background-color: #cccccc;
                 float: left;
+                border: #000 solid thin;
             }
             div.tableList a{
                 display: block;
@@ -19,7 +20,6 @@
                 background-color: #ccffff;
             }
             div.table iframe{
-                background: #9999ff;
                 float: left;
                 width: 1000px; height: 650px;
                 overflow: scroll;
