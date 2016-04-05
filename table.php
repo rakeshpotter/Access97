@@ -1,13 +1,24 @@
 <?php
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-if (isset($_POST['tableName']) && $_POST['tableName'] != '') {
+session_start();
+$dbname = NULL;
+
+if (isset($_SESSION['dbname']) && $_SESSION['dbname'] != '') {
+    $path = $_SESSION['dbname'];
+    if (is_file($path)) {
+        $dbname = $path;
+        $_SESSION['dbname'] = $dbname;
+    }
+}else{
+    echo "Session Failed. Please Select File Provide MDB Path.";
+    exit();
+}
+
+if (isset($_POST['tableName']) && $_POST['tableName'] != '' && $dbname != NULL) {
+//    echo $dbname;
     $tableName = $_POST['tableName'];
     include_once './scripts/msaccessDatabase.class.php';
-    $db = new MsaccessDatabase("D:\\xampp\\htdocs\\Reports\\ACCWIZW.MDB");
+    
+    $db = new MsaccessDatabase($dbname);
     $db->query("select * from $tableName");
     $tableRows = $db->resultset();
 } else {
@@ -36,7 +47,7 @@ if (isset($_POST['tableName']) && $_POST['tableName'] != '') {
         /* Start The Connection */
         $user = '';
         $password = '';
-        $dbname = 'D:\xampp\htdocs\Reports\ACCWIZW.MDB';
+        
         $dbh = odbc_connect("Driver={Microsoft Access Driver (*.mdb)};Dbq=$dbname", $user, $password);
 
 
@@ -101,7 +112,8 @@ function formatCell($val, $prop) {
             echo $r . $val . $e;
             break;
         case "SMALLINT":
-            echo $r.$val.$e;break;
+            echo $r . $val . $e;
+            break;
         case "DATETIME":
             echo $c . date('m-d-Y', strtotime($val)) . $e;
             break;
