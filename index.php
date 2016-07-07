@@ -28,7 +28,7 @@ if (isset($_POST['dbname'])) {
         <script src="jquery/jquery.js"></script>
         <style type="text/css">
             div.tableList{
-                height: 650px; width: 300px;
+                height: 90%; width: 20%;
                 overflow-y: scroll;
                 background-color: #cccccc;
                 float: left;
@@ -45,7 +45,7 @@ if (isset($_POST['dbname'])) {
             }
             div.table iframe{
                 float: left;
-                width: 1000px; height: 650px;
+                width: 79%; height: 90%;
                 overflow: scroll;
             }
         </style>
@@ -54,7 +54,7 @@ if (isset($_POST['dbname'])) {
 
         <div>
             <form method="post">
-                <input type="text" name="dbname" value="<?= @$path ?>"/><input type="submit" value="Change MDB Path."/>
+                <input type="text" name="dbname" value="<?= @$path ?>" style="width:600px;"/><input type="submit" value="Change MDB Path."/>
             </form>
             <b>MDB Path: </b><?= $dbname ?>&nbsp;&nbsp;&nbsp;
         </div>
