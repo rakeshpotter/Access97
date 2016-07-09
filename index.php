@@ -43,9 +43,17 @@ if (isset($_POST['dbname'])) {
             div.tableList a:hover{
                 background-color: #ccffff;
             }
-            div.table iframe{
+            div.table{
                 float: left;
                 width: 79%; height: 90%;
+            }
+            div.table div{
+                float: left;
+                width: 100%; height: 10%;
+            }
+            div.table iframe{
+                float: left;
+                width: 100%; height: 90%;
                 overflow: scroll;
             }
         </style>
@@ -56,7 +64,7 @@ if (isset($_POST['dbname'])) {
             <form method="post">
                 <input type="text" name="dbname" value="<?= @$path ?>" style="width:600px;"/><input type="submit" value="Change MDB Path."/>
             </form>
-            <b>MDB Path: </b><?= $dbname ?>&nbsp;&nbsp;&nbsp;
+            <a href="index.php"><b>MDB Path: </b><?= $dbname ?></a>
         </div>
         <?php
         if ($dbname != NULL) {
@@ -66,9 +74,11 @@ if (isset($_POST['dbname'])) {
             ?>
             <div class="tableList">
                 <?php
+                $i = 0;
                 while (odbc_fetch_row($result)) {
                     if (odbc_result($result, "TABLE_TYPE") == "TABLE" || 0) {
-                        echo "<a href='#' onclick='showTable(\"" . odbc_result($result, 'TABLE_NAME') . "\")'>" . odbc_result($result, "TABLE_NAME") . "</a>";
+                        $i++;
+                        echo "<a href='#' onclick='showTable(\"" . odbc_result($result, 'TABLE_NAME') . "\")'>$i) " . odbc_result($result, "TABLE_NAME") . "</a>";
 //                echo "<br>" . odbc_result_all($result);
                     }
                 }
@@ -76,6 +86,20 @@ if (isset($_POST['dbname'])) {
             </div>
             <div class="table">
                 <iframe name="tableIframe" src=""></iframe>
+                <div>
+                    <form id="queryForm" method="post" action="query.php" target="tableIframe">
+                        <table  style="width:100%;">
+                            <tr>
+                                <td style="width:90%; height: 100%;">
+                                    <textarea rows="5" name="query" id="query" style="width:100%; background: #cccccc;"><?= @$query ?></textarea>
+                                </td>
+                                <td style="width:10%;">
+                                    <input type="button" value="Execute" onclick="executeQuery()"/>
+                                </td>
+                            </tr>
+                        </table>
+                    </form>
+                </div>
             </div>
             <form id="form" method="post" action="table.php" target="tableIframe" style="display: none;">
                 <input type="hidden" value="" id="tableName" name="tableName"/>
@@ -88,6 +112,9 @@ if (isset($_POST['dbname'])) {
             function showTable(t) {
                 document.getElementById('tableName').value = t;
                 document.getElementById('form').submit();
+            }
+            function executeQuery() {
+                document.getElementById('queryForm').submit();
             }
         </script>
     </body>
