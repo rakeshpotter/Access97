@@ -21,7 +21,8 @@ if (isset($_POST['query']) && $_POST['query'] != '' && $dbname != NULL) {
         $db = new MsaccessDatabase($dbname);
         $db->query($query);
         $isSelect = strpos($query, "select");
-        if ($isSelect === FALSE) {
+        $isInto = strpos($query, "into");
+        if ($isSelect === FALSE || $isInto !== FALSE) {
             $response = $db->execute();
             echo "Response = " . $response;
         } else {
@@ -39,6 +40,7 @@ if (isset($_POST['query']) && $_POST['query'] != '' && $dbname != NULL) {
 function printTable($table) {
     if (is_array($table) && isset($table[0])) {
         ?>
+        No. Of Records : <?= count($table) ?>
         <table border="1" style="border-collapse: collapse;">
             <thead>
                 <tr>
