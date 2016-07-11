@@ -20,9 +20,11 @@ if (isset($_POST['query']) && $_POST['query'] != '' && $dbname != NULL) {
     try {
         $db = new MsaccessDatabase($dbname);
         $db->query($query);
+        $isSELECT = strpos($query, "SELECT");
         $isSelect = strpos($query, "select");
+        $isINTO = strpos($query, "INTO");
         $isInto = strpos($query, "into");
-        if ($isSelect === FALSE || $isInto !== FALSE) {
+        if (($isSelect === FALSE && $isSELECT === FALSE) || ($isInto !== FALSE && $isINTO !== FALSE)) {
             $response = $db->execute();
             echo "Response = " . $response;
         } else {

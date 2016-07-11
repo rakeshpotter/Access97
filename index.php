@@ -110,6 +110,8 @@ if (isset($_POST['dbname'])) {
         <script type="text/javascript">
 
             function showTable(t) {
+                var q = "SELECT * FROM " + t;
+                document.getElementById('query').innerHTML = q;
                 document.getElementById('tableName').value = t;
                 document.getElementById('form').submit();
             }
