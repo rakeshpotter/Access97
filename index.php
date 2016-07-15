@@ -5,11 +5,12 @@ $password = '';
 $dbname = NULL;
 if (isset($_POST['dbname'])) {
     if (!isset($_SESSION['access97'])) {
-        $password = md5($_POST['dbname']);
+        $password = $_POST['dbname'];
         if ($password == PASSWORD) {
             $_SESSION['access97'] = PASSWORD;
-        }else{
-            echo 'Wrong Password.';
+            header("location: index.php");
+        } else {
+            echo 'Authentication Failed.';
         }
     } else {
         $path = $_POST['dbname'];
@@ -28,6 +29,11 @@ if (isset($_POST['dbname'])) {
             $_SESSION['dbname'] = $dbname;
         }
     }
+}
+if (!isset($_SESSION['access97'])) {
+    $autoComplete = 'autocomplete="off"';
+} else {
+    $autoComplete = '';
 }
 ?>
 <html>
@@ -75,7 +81,7 @@ if (isset($_POST['dbname'])) {
 
         <div>
             <form method="post">
-                <input type="text" name="dbname" value="<?= @$path ?>" style="width:600px;"/><input type="submit" value="Change MDB Path."/>
+                <input <?= $autoComplete ?> type="text" name="dbname" value="<?= @$path ?>" style="width:600px;"/><input type="submit" value="Change MDB Path."/>
             </form>
             <a href="index.php"><b>MDB Path: </b><?= $dbname ?></a>
         </div>
