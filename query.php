@@ -1,5 +1,5 @@
 <?php
-session_start();
+require_once './__sessionChecking.php';
 $dbname = NULL;
 
 if (isset($_SESSION['dbname']) && $_SESSION['dbname'] != '') {
@@ -43,11 +43,12 @@ function printTable($table) {
     if (is_array($table) && isset($table[0])) {
         ?>
         No. Of Records : <?= count($table) ?>
-        <table border="1" style="border-collapse: collapse;">
+        <table border="1" style="border-color: #000;">
             <thead>
                 <tr>
                     <?php
                     $row = $table[0];
+                    echo "<th style='min-width:40px;'>#</th>";
                     foreach ($row as $col => $val) {
                         echo "<th>$col</th>";
                     }
@@ -56,8 +57,10 @@ function printTable($table) {
             </thead>
             <tbody>
                 <?php
+                $i = 1;
                 foreach ($table as $row) {
                     echo "<tr>";
+                    echo "<th>" . $i++ . "</th>";
                     foreach ($row as $val) {
                         echo "<td>$val</td>";
                     }
@@ -72,3 +75,12 @@ function printTable($table) {
     }
 }
 ?>
+<style>
+    th{
+        background-color: #666666;
+        color: #ffffff;
+    }
+    td{
+        background: #cccccc;
+    }
+</style>

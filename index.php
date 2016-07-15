@@ -1,15 +1,24 @@
 <?php
-session_start();
+require_once './__sessionChecking.php';
 $user = '';
 $password = '';
 $dbname = NULL;
 if (isset($_POST['dbname'])) {
-    $path = $_POST['dbname'];
-    if (is_file($path)) {
-        $dbname = $path;
-        $_SESSION['dbname'] = $dbname;
+    if (!isset($_SESSION['access97'])) {
+        $password = md5($_POST['dbname']);
+        if ($password == PASSWORD) {
+            $_SESSION['access97'] = PASSWORD;
+        }else{
+            echo 'Wrong Password.';
+        }
     } else {
-        echo "Incorrect Path : '$path'";
+        $path = $_POST['dbname'];
+        if (is_file($path)) {
+            $dbname = $path;
+            $_SESSION['dbname'] = $dbname;
+        } else {
+            echo "Incorrect Path : '$path'";
+        }
     }
 } else {
     if (isset($_SESSION['dbname']) && $_SESSION['dbname'] != '') {
@@ -42,6 +51,10 @@ if (isset($_POST['dbname'])) {
             }
             div.tableList a:hover{
                 background-color: #ccffff;
+            }
+            div.tableList a.active{
+                background-color: #999999;
+                color: #ffffff;
             }
             div.table{
                 float: left;
@@ -78,7 +91,7 @@ if (isset($_POST['dbname'])) {
                 while (odbc_fetch_row($result)) {
                     if (odbc_result($result, "TABLE_TYPE") == "TABLE" || 0) {
                         $i++;
-                        echo "<a href='#' onclick='showTable(\"" . odbc_result($result, 'TABLE_NAME') . "\")'>$i) " . odbc_result($result, "TABLE_NAME") . "</a>";
+                        echo "<a href='#' id='" . odbc_result($result, 'TABLE_NAME') . "' onclick='showTable(\"" . odbc_result($result, 'TABLE_NAME') . "\")'>$i) " . odbc_result($result, "TABLE_NAME") . "</a>";
 //                echo "<br>" . odbc_result_all($result);
                     }
                 }
@@ -110,6 +123,8 @@ if (isset($_POST['dbname'])) {
         <script type="text/javascript">
 
             function showTable(t) {
+                $('.active').removeClass('active');
+                $('a#' + t).addClass('active');
                 var q = "SELECT * FROM " + t;
                 document.getElementById('query').innerHTML = q;
                 document.getElementById('tableName').value = t;

@@ -1,5 +1,5 @@
 <?php
-session_start();
+require_once './__sessionChecking.php';
 $dbname = NULL;
 
 if (isset($_SESSION['dbname']) && $_SESSION['dbname'] != '') {
