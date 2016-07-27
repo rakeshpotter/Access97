@@ -9,7 +9,7 @@ if (isset($_SESSION['access97'])) {
     if (USERNAME == md5($_SESSION['username'])) {
         $superUser = " Super User";
     }
-    if ($_SERVER['SCRIPT_NAME'] == "/Access97/index.php") {
+    if (defined("PASSWORD")) {
         echo "<a href='logout.php' style='float:right;'>Logout$superUser</a>";
     }
 } else {
