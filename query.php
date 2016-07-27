@@ -20,16 +20,37 @@ if (isset($_POST['query']) && $_POST['query'] != '' && $dbname != NULL) {
     try {
         $db = new MsaccessDatabase($dbname);
         $db->query($query);
-        $isSELECT = strpos($query, "SELECT");
-        $isSelect = strpos($query, "select");
-        $isINTO = strpos($query, "INTO");
-        $isInto = strpos($query, "into");
-        if (($isSelect === FALSE && $isSELECT === FALSE) || ($isInto !== FALSE && $isINTO !== FALSE)) {
-            $response = $db->execute();
-            echo "Response = " . $response;
+        $isSelect = stripos($query, "select");
+        $isInto = stripos($query, "into");
+        $isDrop = stripos($query, "drop");
+        $isAlter = stripos($query, "alter");
+        $isUpdate = stripos($query, "update");
+        $isInsert = stripos($query, "insert");
+        $isCreate = stripos($query, "create");
+        if ((USERNAME == md5($_SESSION['username'])) ||
+                ($isInto !== FALSE &&
+                $isDrop !== FALSE &&
+                $isAlter !== FALSE &&
+                $isUpdate !== FALSE &&
+                $isInsert !== FALSE &&
+                $isCreate !== FALSE)) {
+            if ($isSelect === FALSE || $isInto !== FALSE) {
+                $response = $db->execute();
+                echo "Response = " . $response;
+            } else {
+                $response = $db->resultset();
+                printTable($response);
+            }
         } else {
-            $response = $db->resultset();
-            printTable($response);
+            echo "Your Are Not Allowed To Alter OR Update The Database.";
+            if (!isset($_SESSION['editAttempt'])) {
+                $_SESSION['editAttempt'] = 1;
+            }
+            if ($_SESSION['editAttempt'] < 3) {
+                $_SESSION['editAttempt'] ++;
+            } else {
+                session_destroy();
+            }
         }
     } catch (Exception $e) {
         echo "Exception Coutch.<br>";

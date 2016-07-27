@@ -1,5 +1,8 @@
 <?php
+define("PASSWORD", $_SERVER['HTTP_HOST'] . $_SERVER['SCRIPT_NAME']);
+
 require_once './__sessionChecking.php';
+
 $user = '';
 $password = '';
 $dbname = NULL;
@@ -8,6 +11,7 @@ if (isset($_POST['dbname'])) {
         $password = $_POST['dbname'];
         if ($password == PASSWORD) {
             $_SESSION['access97'] = PASSWORD;
+            $_SESSION['username'] = $_POST['username'];
             header("location: index.php");
         } else {
             echo 'Authentication Failed.';
@@ -32,8 +36,10 @@ if (isset($_POST['dbname'])) {
 }
 if (!isset($_SESSION['access97'])) {
     $autoComplete = 'autocomplete="off"';
+    $usernameBox = TRUE;
 } else {
     $autoComplete = '';
+    $usernameBox = FALSE;
 }
 ?>
 <html>
@@ -81,7 +87,12 @@ if (!isset($_SESSION['access97'])) {
 
         <div>
             <form method="post">
-                <input <?= $autoComplete ?> type="text" name="dbname" value="<?= @$path ?>" style="width:600px;"/><input type="submit" value="Change MDB Path."/>
+                <input <?= $autoComplete ?> type="text" name="dbname" value="<?= @$path ?>" style="width:600px;"/><input type="submit" value="Change MDB Path."/><br>
+                <?php
+                if ($usernameBox) {
+                    echo '<input type="password" name="username" value="username"/>';
+                }
+                ?>
             </form>
             <a href="index.php"><b>MDB Path: </b><?= $dbname ?></a>
         </div>
@@ -132,12 +143,13 @@ if (!isset($_SESSION['access97'])) {
                 $('.active').removeClass('active');
                 $('a#' + t).addClass('active');
                 var q = "SELECT * FROM " + t;
-                document.getElementById('query').innerHTML = q;
-                document.getElementById('tableName').value = t;
-                document.getElementById('form').submit();
+//                var q = "DROP TABLE " + t;
+                $('#query').val(q);
+                $('#tableName').val(t);
+                $('#form').submit();
             }
             function executeQuery() {
-                document.getElementById('queryForm').submit();
+                $('#queryForm').submit();
             }
         </script>
     </body>
