@@ -138,7 +138,11 @@ if (!isset($_SESSION['access97'])) {
         }
         ?>
         <script type="text/javascript">
-
+            $(document).ready(function () {
+                $('#query').focusin(function () {
+                    $(this).select();
+                });
+            });
             function showTable(t) {
                 $('.active').removeClass('active');
                 $('a#' + t).addClass('active');

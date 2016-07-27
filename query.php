@@ -29,20 +29,14 @@ if (isset($_POST['query']) && $_POST['query'] != '' && $dbname != NULL) {
         $isCreate = stripos($query, "create");
         $isDelete = stripos($query, "delete");
         if ((USERNAME == md5($_SESSION['username'])) ||
-                ($isInto !== FALSE &&
-                $isDrop !== FALSE &&
-                $isAlter !== FALSE &&
-                $isUpdate !== FALSE &&
-                $isInsert !== FALSE &&
-                $isCreate !== FALSE)) {
-            if ($isSelect === FALSE || $isInto !== FALSE) {
-                $response = $db->execute();
-                echo "Response = " . $response;
-            } else {
-                $response = $db->resultset();
-                printTable($response);
-            }
-        } else {
+                $isInto !== FALSE ||
+                $isDrop !== FALSE ||
+                $isAlter !== FALSE ||
+                $isUpdate !== FALSE ||
+                $isInsert !== FALSE ||
+                $isCreate !== FALSE ||
+                $isDelete !== FALSE) {
+
             echo "Your Are Not Allowed To Alter OR Update The Database.";
             if (!isset($_SESSION['editAttempt'])) {
                 $_SESSION['editAttempt'] = 1;
@@ -51,6 +45,14 @@ if (isset($_POST['query']) && $_POST['query'] != '' && $dbname != NULL) {
                 $_SESSION['editAttempt'] ++;
             } else {
                 session_destroy();
+            }
+        } else {
+            if ($isSelect === FALSE || $isInto !== FALSE) {
+                $response = $db->execute();
+                echo "Response = " . $response;
+            } else {
+                $response = $db->resultset();
+                printTable($response);
             }
         }
     } catch (Exception $e) {
