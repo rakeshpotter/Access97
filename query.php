@@ -27,6 +27,7 @@ if (isset($_POST['query']) && $_POST['query'] != '' && $dbname != NULL) {
         $isUpdate = stripos($query, "update");
         $isInsert = stripos($query, "insert");
         $isCreate = stripos($query, "create");
+        $isDelete = stripos($query, "delete");
         if ((USERNAME == md5($_SESSION['username'])) ||
                 ($isInto !== FALSE &&
                 $isDrop !== FALSE &&
