@@ -1,6 +1,6 @@
 <?php
 
-session_start();
+@session_start();
 
 define("USERNAME", "1718d57986110b6af2dd96b59d3db416");
 

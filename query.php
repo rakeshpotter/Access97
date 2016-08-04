@@ -1,4 +1,5 @@
 <?php
+@session_start();
 require_once './__sessionChecking.php';
 $dbname = NULL;
 
@@ -28,21 +29,22 @@ if (isset($_POST['query']) && $_POST['query'] != '' && $dbname != NULL) {
         $isInsert = stripos($query, "insert");
         $isCreate = stripos($query, "create");
         $isDelete = stripos($query, "delete");
-        if ((USERNAME == md5($_SESSION['username'])) ||
-                $isInto !== FALSE ||
+        
+        if ((USERNAME != md5($_SESSION['username'])) &&
+                ($isInto !== FALSE ||
                 $isDrop !== FALSE ||
                 $isAlter !== FALSE ||
                 $isUpdate !== FALSE ||
                 $isInsert !== FALSE ||
                 $isCreate !== FALSE ||
-                $isDelete !== FALSE) {
+                $isDelete !== FALSE)) {
 
             echo "Your Are Not Allowed To Alter OR Update The Database.";
             if (!isset($_SESSION['editAttempt'])) {
                 $_SESSION['editAttempt'] = 1;
             }
             if ($_SESSION['editAttempt'] < 3) {
-                $_SESSION['editAttempt'] ++;
+//                $_SESSION['editAttempt'] ++;
             } else {
                 session_destroy();
             }
