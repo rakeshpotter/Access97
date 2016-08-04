@@ -125,7 +125,8 @@ WHERE (((IHEADER.FILLED)<>'V') AND ((IHEADER.DOCTYPE)<>'C') AND ((INVOICE_MAIL.I
             echo "Wrong Parameters.";
         }
         if (isset($arr[2]) && $arr[2] == 1) {
-            echo "<pre>" . $query . "</pre><br><br>";
+            global $printQuery;
+            $printQuery = TRUE;
         }
     }
     return $query;
@@ -140,3 +141,16 @@ WHERE (((IHEADER.FILLED)<>'V') AND ((IHEADER.DOCTYPE)<>'C') AND ((INVOICE_MAIL.I
         background: #cccccc;
     }
 </style>
+<?php
+if (isset($printQuery) && $printQuery) {
+    ?>
+    <script src="jquery/jquery.js" type="text/javascript"></script>
+    <script>
+        var q = <?= json_encode($query) ?>;
+        $(document).ready(function () {
+            window.parent.$("#query").val(q);
+        });
+    </script>
+    <?php
+}
+?>
