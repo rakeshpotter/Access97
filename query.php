@@ -20,7 +20,6 @@ if (isset($_POST['query']) && $_POST['query'] != '' && $dbname != NULL) {
     include_once './scripts/msaccessDatabase.class.php';
     try {
         $db = new MsaccessDatabase($dbname);
-        $db->query($query);
         $isSelect = stripos($query, "select");
         $isInto = stripos($query, "into");
         $isDrop = stripos($query, "drop");
@@ -29,7 +28,8 @@ if (isset($_POST['query']) && $_POST['query'] != '' && $dbname != NULL) {
         $isInsert = stripos($query, "insert");
         $isCreate = stripos($query, "create");
         $isDelete = stripos($query, "delete");
-        
+        $isQuery = stripos($query, "@query:");
+
         if ((USERNAME != md5($_SESSION['username'])) &&
                 ($isInto !== FALSE ||
                 $isDrop !== FALSE ||
@@ -49,7 +49,11 @@ if (isset($_POST['query']) && $_POST['query'] != '' && $dbname != NULL) {
                 session_destroy();
             }
         } else {
-            if ($isSelect === FALSE || $isInto !== FALSE) {
+            if ($isQuery !== FALSE) {
+                $query = getQuery($query);
+            }
+            $db->query($query);
+            if ($isQuery === FALSE && ($isSelect === FALSE || $isInto !== FALSE)) {
                 $response = $db->execute();
                 echo "Response = " . $response;
             } else {
@@ -99,6 +103,32 @@ function printTable($table) {
     } else {
         echo "No Record Found.";
     }
+}
+
+function getQuery($query) {
+    $arr = explode(":", $query);
+    $query = '';
+    if (isset($arr[1])) {
+        if ($arr[1] == 'newOrderMail') {
+            $query = "SELECT oheader.ORDNUM, oheader.ORDDATE, order_mail.OM_MAIL_SENT, order_mail.OM_MAIL_TIME, Slsman_EXTEND.SX_SL_EMAIL, 
+            oheader.CUSTPO, ICUST.IC_NAME, Slsman_EXTEND.SX_SEND_MAIL, Slsman_EXTEND.SX_ORD_MAIL
+            FROM (((oheader LEFT JOIN order_mail ON oheader.ordnum = order_mail.om_ordnum) 
+            LEFT JOIN Slsman ON oheader.SLSCODE1 = Slsman.SL_CODE) 
+            LEFT JOIN Slsman_EXTEND ON Slsman.SL_CODE = Slsman_EXTEND.SX_SL_CODE) 
+            LEFT JOIN ICUST ON oheader.CUSTCODE = ICUST.IC_CODE
+            WHERE (((oheader.FILLED)='O') AND ((IsNull([order_mail].[OM_MAIL_SENT]))<>False)) OR (((order_mail.OM_MAIL_SENT)=False));";
+        } else if ($arr[1] == 'invoiceMail') {
+            $query = "SELECT DISTINCT DEPART.D_NAME, ICUST.IC_NAME, IHEADER.CUSTPO, IHEADER.ORDNUM, ITRANS.ALLOCNUM, IHEADER.INVNUM, IHEADER.SHIPVIA, IHEADER.INVINV, TERMS.TRMCOD, IHEADER.FILLED, IHEADER.DOCTYPE, INVOICE_MAIL.IM_MAIL_SENT, INVOICE_MAIL.IM_MEMO, ICUST_CONTACTS.CC_EMAIL, ICUST_CONTACTS.CC_SEND_MAIL, ICUST_CONTACTS.CC_INV_MAIL, Slsman_EXTEND.SX_SL_EMAIL, Slsman_EXTEND.SX_SEND_MAIL, Slsman_EXTEND.SX_INV_MAIL
+FROM ((((((IHEADER INNER JOIN ICUST ON IHEADER.CUSTCODE = ICUST.IC_CODE) INNER JOIN DEPART ON IHEADER.DIVISION = DEPART.D_ID) INNER JOIN ITRANS ON IHEADER.INVNUM = ITRANS.INVNUM) INNER JOIN TERMS ON IHEADER.TRMCODE = TERMS.TRMCODE) LEFT JOIN INVOICE_MAIL ON IHEADER.INVNUM = INVOICE_MAIL.IM_INVNUM) LEFT JOIN ICUST_CONTACTS ON ICUST.IC_CODE = ICUST_CONTACTS.CC_CUST_ID) LEFT JOIN Slsman_EXTEND ON IHEADER.SLSCODE1 = Slsman_EXTEND.SX_SL_CODE
+WHERE (((IHEADER.FILLED)<>'V') AND ((IHEADER.DOCTYPE)<>'C') AND ((INVOICE_MAIL.IM_MAIL_SENT)<>-1)) OR (((INVOICE_MAIL.IM_MAIL_SENT) Is Null));";
+        } else {
+            echo "Wrong Parameters.";
+        }
+        if (isset($arr[2]) && $arr[2] == 1) {
+            echo "<pre>" . $query . "</pre><br><br>";
+        }
+    }
+    return $query;
 }
 ?>
 <style>
