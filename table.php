@@ -8,7 +8,7 @@ if (isset($_SESSION['dbname']) && $_SESSION['dbname'] != '') {
         $dbname = $path;
         $_SESSION['dbname'] = $dbname;
     }
-}else{
+} else {
     echo "Session Failed. Please Select File Provide MDB Path.";
     exit();
 }
@@ -17,7 +17,7 @@ if (isset($_POST['tableName']) && $_POST['tableName'] != '' && $dbname != NULL) 
 //    echo $dbname;
     $tableName = $_POST['tableName'];
     include_once './scripts/msaccessDatabase.class.php';
-    
+
     $db = new MsaccessDatabase($dbname);
     $db->query("select * from $tableName");
     $tableRows = $db->resultset();
@@ -47,7 +47,7 @@ if (isset($_POST['tableName']) && $_POST['tableName'] != '' && $dbname != NULL) 
         /* Start The Connection */
         $user = '';
         $password = '';
-        
+
         $dbh = odbc_connect("Driver={Microsoft Access Driver (*.mdb)};Dbq=$dbname", $user, $password);
 
 
