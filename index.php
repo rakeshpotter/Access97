@@ -119,7 +119,7 @@ if (!isset($_SESSION['access97'])) {
                 <div>
                     <form id="queryForm" method="post" action="query.php" target="tableIframe">
                         <table  style="width:100%;">
-                            <tr>
+<!--                            <tr>
                                 <td>
                                     <input type="text" id="text1"/>
                                     <input type="text" id="text2"/>
@@ -131,14 +131,14 @@ if (!isset($_SESSION['access97'])) {
                                 </td>
                                 <td>
                                 </td>
-                            </tr>
+                            </tr>-->
                             <tr>
                                 <td style="width:90%; height: 100%;">
                                     <textarea rows="5" name="query" id="query" style="width:100%; background: #cccccc;"><?= @$query ?></textarea>
                                 </td>
-                                <td style="width:10%;">
+<!--                                <td style="width:10%;">
                                     <input type="button" value="Fill" onclick="executeFillQuery()"/>
-                                </td>
+                                </td>-->
                                 <td style="width:10%;">
                                     <input type="button" value="Execute" onclick="executeQuery()"/>
                                 </td>
@@ -176,7 +176,8 @@ if (!isset($_SESSION['access97'])) {
                 var v2 = $('#text2').val();
                 var v3 = $('#text3').val();
                 var v4 = $('#text4').val();
-                var v5 = $('#text5').val();
+                var v5 = parseInt($('#text5').val());
+                $('#text5').val(v5 + 1);
                 var q = "INSERT INTO SIZERATIO (SIZECODE,SIZERUN,SIZE,RATIO,SEQUENCE)\
                         VALUES ('" + v1 + "','" + v2 + "','" + v3 + "'," + v4 + "," + v5 + ")";
                 $('#query').val(q);
