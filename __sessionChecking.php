@@ -2,7 +2,7 @@
 
 @session_start();
 
-define("USERNAME", "1718d57986110b6af2dd96b59d3db416");
+defined("USERNAME") or define("USERNAME", "1718d57986110b6af2dd96b59d3db416");
 
 $superUser = '';
 if (isset($_SESSION['access97'])) {

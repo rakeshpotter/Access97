@@ -1,6 +1,6 @@
 <?php
 define("PASSWORD", $_SERVER['HTTP_HOST'] . $_SERVER['SCRIPT_NAME']);
-
+defined("USERNAME") or define("USERNAME", "1718d57986110b6af2dd96b59d3db416");
 require_once './__sessionChecking.php';
 
 $user = '';

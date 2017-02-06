@@ -53,7 +53,7 @@ if (isset($_POST['query']) && $_POST['query'] != '' && $dbname != NULL) {
                 $query = getQuery($query);
             }
             $db->query($query);
-            if ($isQuery === FALSE && ($isSelect === FALSE || $isInto !== FALSE)) {
+            if ($isQuery === FALSE && ($isDelete !== FALSE || $isSelect === FALSE || $isInto !== FALSE)) {
                 $response = $db->execute();
                 echo "Response = " . $response;
             } else {
