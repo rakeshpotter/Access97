@@ -115,7 +115,7 @@ function formatCell($val, $prop) {
             echo $r . $val . $e;
             break;
         case "DATETIME":
-            echo $c . date('m-d-Y', strtotime($val)) . $e;
+            echo $c . (($val) ? date('m-d-Y', strtotime($val)) : '') . $e;
             break;
         case "CURRENCY":
             echo $r . number_format($val, 2) . $e;
